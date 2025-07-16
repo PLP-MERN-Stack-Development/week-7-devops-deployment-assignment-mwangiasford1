@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Task from './components/Task';
+import Login from './components/Login';
+import Register from './components/Register';
 import { itemsAPI } from './services/api';
+import { useAuth } from './contexts/AuthContext';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -12,6 +15,9 @@ function App() {
     description: ''
   });
   const [isAddingTask, setIsAddingTask] = useState(false);
+  const [showAuth, setShowAuth] = useState('login'); // 'login' or 'register'
+  
+  const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
 
   // Fetch all tasks
   const fetchTasks = async () => {
@@ -68,11 +74,48 @@ function App() {
     }
   };
 
-  // Load tasks on component mount
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    setTasks([]);
+    setError(null);
+  };
 
+  // Load tasks when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      fetchTasks();
+    } else if (!isAuthenticated && !authLoading) {
+      setTasks([]);
+      setLoading(false);
+    }
+  }, [isAuthenticated, authLoading]);
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="app">
+        <div className="container">
+          <div className="loading">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show authentication if user is not logged in
+  if (!isAuthenticated) {
+    return (
+      <div className="app">
+        {showAuth === 'login' ? (
+          <Login onSwitchToRegister={() => setShowAuth('register')} />
+        ) : (
+          <Register onSwitchToLogin={() => setShowAuth('login')} />
+        )}
+      </div>
+    );
+  }
+
+  // Main app content for authenticated users
   if (loading) {
     return (
       <div className="app">
@@ -87,8 +130,18 @@ function App() {
     <div className="app">
       <div className="container">
         <header className="app-header">
-          <h1>Task Manager</h1>
-          <p>Manage your tasks with ease</p>
+          <div className="header-content">
+            <div>
+              <h1>Task Manager</h1>
+              <p>Manage your tasks with ease</p>
+            </div>
+            <div className="user-section">
+              <span className="user-name">Welcome, {user?.name || 'User'}!</span>
+              <button onClick={handleLogout} className="btn btn-secondary logout-btn">
+                Logout
+              </button>
+            </div>
+          </div>
         </header>
 
         {error && (
