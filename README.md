@@ -21,8 +21,8 @@ A full-stack task management application built with the MERN stack (MongoDB, Exp
 
 ## 🚀 Live Demo
 
-- **Frontend:** [Your Vercel/Netlify URL here]
-- **Backend API:** [Your Render URL here]
+- **Frontend:** https://mern-task-manager-frontend-u45r.onrender.com
+- **Backend API:** https://mern-task-manager-backend-mz7i.onrender.com
 
 ## 🛠️ Features
 
@@ -77,12 +77,13 @@ REACT_APP_API_URL=http://localhost:5000
    - `MONGODB_URI`: Your MongoDB Atlas connection string
 5. Deploy
 
-### Frontend (Vercel/Netlify)
+### Frontend (Render)
 1. Push code to GitHub
-2. Import project to Vercel/Netlify
-3. Set environment variables:
+2. Create new Static Site on Render
+3. Connect your GitHub repository
+4. Set environment variables:
    - `REACT_APP_API_URL`: Your deployed backend URL
-4. Deploy
+5. Deploy
 
 ## 📚 API Endpoints
 
@@ -98,7 +99,7 @@ REACT_APP_API_URL=http://localhost:5000
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose
 - **Frontend:** React.js, Axios, CSS3
 - **Database:** MongoDB Atlas
-- **Deployment:** Render (Backend), Vercel/Netlify (Frontend)
+- **Deployment:** Render (Backend & Frontend)
 
 ## 📝 License
 

@@ -32,7 +32,6 @@ mongoose.connect(MONGODB_URI, {
   serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
   socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
   bufferCommands: false, // Disable mongoose buffering
-  bufferMaxEntries: 0, // Disable mongoose buffering
 })
   .then(() => {
     console.log('✅ Connected to MongoDB Atlas successfully!');
@@ -62,8 +61,13 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/items', itemsRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
-  console.log(`API base: http://localhost:${PORT}/api`);
-}); 
+// Only start the server if this file is run directly
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Health check: http://localhost:${PORT}/health`);
+    console.log(`API base: http://localhost:${PORT}/api`);
+  });
+}
+
+module.exports = app; 

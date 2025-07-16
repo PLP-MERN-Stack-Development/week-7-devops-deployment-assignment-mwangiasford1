@@ -1,0 +1,28 @@
+name: Deploy to Render
+
+on:
+  workflow_run:
+    workflows: ["Backend CI", "Frontend CI"]
+    types:
+      - completed
+  workflow_dispatch: # Allow manual deployment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+    - name: Deploy to Render
+      run: |
+        echo "Deployment triggered successfully!"
+        echo "Backend and Frontend will be automatically deployed by Render"
+        echo "Backend URL: https://mern-task-manager-backend-mz7i.onrender.com"
+        echo "Frontend URL: https://mern-task-manager-frontend-u45r.onrender.com"
+    
+    - name: Notify deployment status
+      run: |
+        echo "✅ Deployment workflow completed"
+        echo "🔗 Check your deployed applications:"
+        echo "   Frontend: https://mern-task-manager-frontend-u45r.onrender.com"
+        echo "   Backend: https://mern-task-manager-backend-mz7i.onrender.com" 

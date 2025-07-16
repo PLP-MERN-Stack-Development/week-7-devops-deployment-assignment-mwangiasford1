@@ -1,0 +1,94 @@
+name: Full CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    name: Backend Tests
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js 18
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+    
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        npm ci
+    
+    - name: Run backend tests
+      run: |
+        cd backend
+        npm test
+      env:
+        CI: true
+    
+    - name: Check backend vulnerabilities
+      run: |
+        cd backend
+        npm audit --audit-level moderate
+
+  frontend-test:
+    runs-on: ubuntu-latest
+    name: Frontend Tests
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js 18
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm test -- --watchAll=false --coverage
+      env:
+        CI: true
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+      env:
+        CI: true
+    
+    - name: Check frontend vulnerabilities
+      run: |
+        cd frontend
+        npm audit --audit-level moderate
+
+  deploy:
+    needs: [backend-test, frontend-test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    name: Deploy to Production
+    
+    steps:
+    - name: Deploy to Render
+      run: |
+        echo "🚀 All tests passed! Deploying to production..."
+        echo "✅ Backend tests: PASSED"
+        echo "✅ Frontend tests: PASSED"
+        echo "🌐 Deploying to Render..."
+        echo "   Frontend: https://mern-task-manager-frontend-u45r.onrender.com"
+        echo "   Backend: https://mern-task-manager-backend-mz7i.onrender.com"
+        echo "📝 Note: Render will automatically deploy when code is pushed to main branch" 
