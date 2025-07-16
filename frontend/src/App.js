@@ -136,7 +136,7 @@ function App() {
               <p>Manage your tasks with ease</p>
             </div>
             <div className="user-section">
-              <span className="user-name">Welcome, {user?.name || 'User'}!</span>
+              <span className="user-name">Welcome, {user?.firstName || user?.username || 'User'}!</span>
               <button onClick={handleLogout} className="btn btn-secondary logout-btn">
                 Logout
               </button>

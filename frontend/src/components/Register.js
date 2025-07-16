@@ -4,7 +4,9 @@ import './Auth.css';
 
 const Register = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -55,15 +57,43 @@ const Register = ({ onSwitchToLogin }) => {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               required
-              placeholder="Enter your full name"
+              placeholder="Enter your username"
+              minLength="3"
+              maxLength="30"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="Enter your first name"
+              maxLength="50"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Enter your last name"
+              maxLength="50"
             />
           </div>
 
