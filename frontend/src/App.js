@@ -195,14 +195,14 @@ function App() {
         </div>
 
         <div className="tasks-section">
-          <h2>Your Tasks ({tasks.length})</h2>
-          {tasks.length === 0 ? (
+          <h2>Your Tasks ({Array.isArray(tasks) ? tasks.length : 0})</h2>
+          {(!Array.isArray(tasks) || tasks.length === 0) ? (
             <div className="no-tasks">
               <p>No tasks yet. Create your first task!</p>
             </div>
           ) : (
             <div className="tasks-list">
-              {tasks.map(task => (
+              {Array.isArray(tasks) && tasks.map(task => (
                 <Task
                   key={task._id}
                   task={task}
