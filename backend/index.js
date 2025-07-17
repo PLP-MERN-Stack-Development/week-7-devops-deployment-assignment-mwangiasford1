@@ -57,11 +57,23 @@ mongoose.connect(MONGODB_URI, {
   .then(() => {
     console.log('✅ Connected to MongoDB Atlas successfully!');
     app.locals.dbStatus = 'connected';
+    // Only start the server after successful DB connection
+    if (require.main === module) {
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📊 Health check: http://localhost:${PORT}/health`);
+        console.log(`🔗 API base: http://localhost:${PORT}/api`);
+        console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
+        console.log(`📝 Items endpoints: http://localhost:${PORT}/api/items`);
+      });
+    }
   })
   .catch((error) => {
     console.error('❌ MongoDB connection error:', error.message);
     console.error('Error details:', error);
     app.locals.dbStatus = 'disconnected';
+    // Optionally, exit the process if DB connection fails
+    process.exit(1);
   });
 
 // Routes
@@ -116,16 +128,5 @@ app.use((err, req, res, next) => {
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 });
-
-// Only start the server if this file is run directly
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📊 Health check: http://localhost:${PORT}/health`);
-    console.log(`🔗 API base: http://localhost:${PORT}/api`);
-    console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
-    console.log(`📝 Items endpoints: http://localhost:${PORT}/api/items`);
-  });
-}
 
 module.exports = app; 
