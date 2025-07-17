@@ -41,6 +41,7 @@ function App() {
 
     try {
       const response = await itemsAPI.create(newTask);
+      console.log('Create task response:', response.data);
       setTasks([response.data, ...tasks]);
       setNewTask({ title: '', description: '' });
       setIsAddingTask(false);
