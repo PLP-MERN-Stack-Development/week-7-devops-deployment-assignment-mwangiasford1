@@ -6,6 +6,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy for correct rate limiting and IP handling on Render/Heroku
+app.set('trust proxy', 1);
+
 // Import middleware
 const {
   requestLogger,
